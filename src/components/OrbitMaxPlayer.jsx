@@ -10,11 +10,10 @@ const videosData = [
 export default function OrbitMaxPlayer() {
   const videoRef = useRef(null);
   const touchStartY = useRef(0);
-  const touchEndY = useRef(0);
   const [currentVideo, setCurrentVideo] = useState(0);
 
   useEffect(() => {
-    if (Hls.isSupported()) {
+    if (videoRef.current && Hls.isSupported()) {
       const hls = new Hls();
       hls.loadSource(videosData[currentVideo].src);
       hls.attachMedia(videoRef.current);
@@ -22,28 +21,26 @@ export default function OrbitMaxPlayer() {
     }
   }, [currentVideo]);
 
-  const handleSwipe = () => {
-    if (touchStartY.current - touchEndY.current > 50) {
+  const handleSwipe = (startY, endY) => {
+    if (startY - endY > 50) {
       setCurrentVideo((prev) => (prev + 1) % videosData.length);
     }
-
-    if (touchEndY.current - touchStartY.current > 50) {
+    if (endY - startY > 50) {
       setCurrentVideo((prev) => (prev - 1 + videosData.length) % videosData.length);
     }
   };
 
   return (
     <div
-      className="h-screen w-screen overflow-hidden relative bg-black"
+      className="fixed inset-0 overflow-hidden bg-black"
       onTouchStart={(e) => (touchStartY.current = e.changedTouches[0].screenY)}
-      onTouchEnd={(e) => {
-        touchEndY.current = e.changedTouches[0].screenY;
-        handleSwipe();
-      }}
+      onTouchEnd={(e) => handleSwipe(touchStartY.current, e.changedTouches[0].screenY)}
     >
       <video
+        key={currentVideo}
         ref={videoRef}
-        className="h-full w-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ pointerEvents: 'none' }}
         loop
         muted
         autoPlay
