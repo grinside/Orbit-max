@@ -9,6 +9,8 @@ const videosData = [
 
 export default function OrbitMaxPlayer() {
   const videoRef = useRef(null);
+  const touchStartY = useRef(0);
+  const touchEndY = useRef(0);
   const [currentVideo, setCurrentVideo] = useState(0);
 
   useEffect(() => {
@@ -20,12 +22,25 @@ export default function OrbitMaxPlayer() {
     }
   }, [currentVideo]);
 
-  const handleNextVideo = () => {
-    setCurrentVideo((prev) => (prev + 1) % videosData.length);
+  const handleSwipe = () => {
+    if (touchStartY.current - touchEndY.current > 50) {
+      setCurrentVideo((prev) => (prev + 1) % videosData.length);
+    }
+
+    if (touchEndY.current - touchStartY.current > 50) {
+      setCurrentVideo((prev) => (prev - 1 + videosData.length) % videosData.length);
+    }
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden relative bg-black">
+    <div
+      className="h-screen w-screen overflow-hidden relative bg-black"
+      onTouchStart={(e) => (touchStartY.current = e.changedTouches[0].screenY)}
+      onTouchEnd={(e) => {
+        touchEndY.current = e.changedTouches[0].screenY;
+        handleSwipe();
+      }}
+    >
       <video
         ref={videoRef}
         className="h-full w-full object-cover"
@@ -39,18 +54,6 @@ export default function OrbitMaxPlayer() {
         <h2 className="text-xl font-bold">{videosData[currentVideo].title}</h2>
         <p className="text-sm opacity-80">{videosData[currentVideo].description}</p>
       </div>
-
-      <div className="absolute bottom-10 right-4 flex flex-col space-y-4 z-10">
-        <button onClick={handleNextVideo} className="bg-white text-black p-2 rounded-full">
-          Next
-        </button>
-      </div>
-
-      <div
-        onClick={handleNextVideo}
-        className="absolute inset-0 z-20"
-        style={{ background: 'rgba(0,0,0,0)' }}
-      ></div>
     </div>
   );
 }
