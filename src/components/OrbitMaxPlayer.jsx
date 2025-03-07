@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
+import { Home, Users, Radio, Search } from 'lucide-react';
 
 const videosData = [
   { id: 1, src: 'https://dchiplr12yf4h.cloudfront.net/vizion-r/zylo/cine-nanar/index.m3u8', title: 'Live Channel 1', description: 'Description Live Channel 1' },
@@ -30,11 +31,20 @@ export default function OrbitMaxPlayer() {
     }
   };
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      videoRef.current.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 overflow-hidden bg-black"
       onTouchStart={(e) => (touchStartY.current = e.changedTouches[0].screenY)}
       onTouchEnd={(e) => handleSwipe(touchStartY.current, e.changedTouches[0].screenY)}
+      onDoubleClick={toggleFullscreen}
     >
       <video
         key={currentVideo}
@@ -51,6 +61,25 @@ export default function OrbitMaxPlayer() {
         <h2 className="text-xl font-bold">{videosData[currentVideo].title}</h2>
         <p className="text-sm opacity-80">{videosData[currentVideo].description}</p>
       </div>
+
+      <footer className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 py-2 flex justify-around text-white z-20">
+        <button className="flex flex-col items-center">
+          <Home size={24} />
+          <span className="text-xs">Accueil</span>
+        </button>
+        <button className="flex flex-col items-center">
+          <Users size={24} />
+          <span className="text-xs">Amis</span>
+        </button>
+        <button className="flex flex-col items-center">
+          <Radio size={24} />
+          <span className="text-xs">Live</span>
+        </button>
+        <button className="flex flex-col items-center">
+          <Search size={24} />
+          <span className="text-xs">Recherche</span>
+        </button>
+      </footer>
     </div>
   );
 }
