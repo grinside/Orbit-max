@@ -8,66 +8,49 @@ const videosData = [
 ];
 
 export default function OrbitMaxPlayer() {
-  const videoRefs = useRef([]);
-  const bgVideoRefs = useRef([]);
+  const videoRef = useRef(null);
+  const [currentVideo, setCurrentVideo] = useState(0);
 
   useEffect(() => {
-    videosData.forEach((video, index) => {
-      if (Hls.isSupported()) {
-        const hlsMain = new Hls();
-        hlsMain.loadSource(video.src);
-        hlsMain.attachMedia(videoRefs.current[index]);
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(videosData[currentVideo].src);
+      hls.attachMedia(videoRef.current);
+      videoRef.current.play();
+    }
+  }, [currentVideo]);
 
-        const hlsBg = new Hls();
-        hlsBg.loadSource(video.src);
-        hlsBg.attachMedia(bgVideoRefs.current[index]);
-      }
-    });
-  }, []);
-
-  const handleScroll = (e) => {
-    const { scrollTop, clientHeight } = e.target;
-    videoRefs.current.forEach((video, index) => {
-      const offsetTop = video.parentElement.offsetTop;
-      if (scrollTop >= offsetTop - clientHeight / 2 && scrollTop < offsetTop + clientHeight - clientHeight / 2) {
-        video.play();
-        bgVideoRefs.current[index].play();
-      } else {
-        video.pause();
-        bgVideoRefs.current[index].pause();
-      }
-    });
+  const handleNextVideo = () => {
+    setCurrentVideo((prev) => (prev + 1) % videosData.length);
   };
 
   return (
-    <div className="h-screen w-screen overflow-y-scroll snap-y snap-mandatory" onScroll={handleScroll}>
-      {videosData.map((video, index) => (
-        <div key={video.id} className="snap-start video-container h-screen w-screen relative overflow-hidden">
-          <video
-            ref={el => bgVideoRefs.current[index] = el}
-            className="absolute inset-0 h-full w-full object-cover blur-xl scale-150 opacity-60"
-            loop
-            muted
-          ></video>
-          <video
-            ref={el => videoRefs.current[index] = el}
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
-            loop
-            muted
-            controls
-          ></video>
-          <div className="absolute bottom-10 left-4 text-white z-10">
-            <h2 className="text-xl font-bold">{video.title}</h2>
-            <p className="text-sm opacity-80">{video.description}</p>
-          </div>
-          <div className="absolute bottom-10 right-4 flex flex-col space-y-4 z-10">
-            <button className="bg-white text-black p-2 rounded-full">Play/Pause</button>
-            <button className="bg-white text-black p-2 rounded-full">Info</button>
-            <button className="bg-white text-black p-2 rounded-full">Share</button>
-          </div>
-        </div>
-      ))}
+    <div className="h-screen w-screen overflow-hidden relative bg-black">
+      <video
+        ref={videoRef}
+        className="h-full w-full object-cover"
+        loop
+        muted
+        autoPlay
+        playsInline
+      ></video>
+
+      <div className="absolute bottom-10 left-4 text-white z-10">
+        <h2 className="text-xl font-bold">{videosData[currentVideo].title}</h2>
+        <p className="text-sm opacity-80">{videosData[currentVideo].description}</p>
+      </div>
+
+      <div className="absolute bottom-10 right-4 flex flex-col space-y-4 z-10">
+        <button onClick={handleNextVideo} className="bg-white text-black p-2 rounded-full">
+          Next
+        </button>
+      </div>
+
+      <div
+        onClick={handleNextVideo}
+        className="absolute inset-0 z-20"
+        style={{ background: 'rgba(0,0,0,0)' }}
+      ></div>
     </div>
   );
 }
