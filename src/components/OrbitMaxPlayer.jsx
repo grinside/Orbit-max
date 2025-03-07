@@ -57,26 +57,26 @@ export default function OrbitMaxPlayer() {
         playsInline
       ></video>
 
-      <div className="absolute bottom-10 left-4 text-white z-10">
+      <div className="absolute bottom-20 left-4 text-white z-10">
         <h2 className="text-xl font-bold">{videosData[currentVideo].title}</h2>
         <p className="text-sm opacity-80">{videosData[currentVideo].description}</p>
       </div>
 
-      <footer className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 py-2 flex justify-around text-white z-20">
-        <button className="flex flex-col items-center">
-          <Home size={24} />
+      <footer className="absolute bottom-0 left-0 right-0 bg-transparent pb-2 pt-4 flex justify-around items-center text-white z-20">
+        <button className="flex flex-col items-center bg-transparent">
+          <Home size={28} />
           <span className="text-xs">Accueil</span>
         </button>
-        <button className="flex flex-col items-center">
-          <Users size={24} />
+        <button className="flex flex-col items-center bg-transparent">
+          <Users size={28} />
           <span className="text-xs">Amis</span>
         </button>
-        <button className="flex flex-col items-center">
-          <Radio size={24} />
+        <button className="flex flex-col items-center bg-transparent">
+          <Radio size={28} />
           <span className="text-xs">Live</span>
         </button>
-        <button className="flex flex-col items-center">
-          <Search size={24} />
+        <button className="flex flex-col items-center bg-transparent">
+          <Search size={28} />
           <span className="text-xs">Recherche</span>
         </button>
       </footer>
