@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import Hls from 'hls.js';
 
 const videosData = [
-  { id: 1, src: 'https://example.com/stream1.m3u8', title: 'Live Channel 1', description: 'Description Live Channel 1' },
-  { id: 2, src: 'https://example.com/stream2.m3u8', title: 'Live Channel 2', description: 'Description Live Channel 2' },
-  { id: 3, src: 'https://example.com/stream3.m3u8', title: 'Live Channel 3', description: 'Description Live Channel 3' },
+  { id: 1, src: 'https://dchiplr12yf4h.cloudfront.net/vizion-r/zylo/cine-nanar/index.m3u8', title: 'Live Channel 1', description: 'Description Live Channel 1' },
+  { id: 2, src: 'https://dchiplr12yf4h.cloudfront.net/vizion-r/zylo/scream-in/index.m3u8', title: 'Live Channel 2', description: 'Description Live Channel 2' },
+  { id: 3, src: 'https://dchiplr12yf4h.cloudfront.net/33diffmedia/bblack-africa/index.m3u8', title: 'Live Channel 3', description: 'Description Live Channel 3' },
 ];
 
 export default function OrbitMaxPlayer() {
